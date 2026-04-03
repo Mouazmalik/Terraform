@@ -1,3 +1,3 @@
-variable "mouaz-vpc" {}
-variable "mouaz-subnet" {}
+variable "vpc_name" {}
+variable "subnet_name" {}
 variable "region" {}

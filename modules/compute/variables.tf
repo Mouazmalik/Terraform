@@ -1,3 +1,3 @@
 variable "vm_name" {}
-variable "region" {}
+variable "zone" {}
 variable "network_id" {}

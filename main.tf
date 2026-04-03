@@ -16,3 +16,22 @@ resource "google_storage_bucket" "tf_state" {
   # Security best practice
   uniform_bucket_level_access = true
 }
+
+
+
+module "network" {
+  source = "./modules/network"
+
+  vpc_name    = "staging-vpc"
+  subnet_name = "staging-subnet"
+  region      = var.region
+}
+
+module "compute" {
+  source = "./modules/compute"
+
+  vm_name    = "staging-vm"
+  zone       = "us-central1-a"
+
+  network_id = module.network.network_id
+}
