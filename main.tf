@@ -31,7 +31,9 @@ module "compute" {
   source = "./modules/compute"
 
   vm_name    = "staging-vm"
-  zone       = "us-central1-a"
+  zone       = "us-west1-a"
 
   network_id = module.network.network_id
+  subnet_id  = module.network.subnet_id   
+
 }
