@@ -4,7 +4,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "tf_state" {
-  name          = "mouaz-tf-state-12345"  # 
+  name          = "mouaz-tf-state-12345" # 
   location      = "US"
   force_destroy = false
 
@@ -23,17 +23,20 @@ module "network" {
   source = "./modules/network"
 
   vpc_name    = "staging-vpc"
-  subnet_name = "staging-subnet"
+   # subnet_name = "staging-subnet"
   region      = var.region
+  private_subnet  = "staging-private-subnet"
+  public_subnet  = "staging-public-subnet"
+
 }
 
 module "compute" {
   source = "./modules/compute"
 
-  vm_name    = "staging-vm"
-  zone       = "us-west1-a"
+  vm_name = "staging-vm"
+  zone    = "us-west1-a"
 
   network_id = module.network.network_id
-  subnet_id  = module.network.subnet_id   
+  subnet_id  = module.network.private_subnet_id
 
 }

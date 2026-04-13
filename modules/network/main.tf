@@ -3,9 +3,16 @@ resource "google_compute_network" "vpc" {
   auto_create_subnetworks = false
 }
 
-resource "google_compute_subnetwork" "subnet" {
-  name          = var.subnet_name
+resource "google_compute_subnetwork" "private" {
+  name          = var.private_subnet
   ip_cidr_range = "10.0.1.0/24"
+  region        = var.region
+  network       = google_compute_network.vpc.id
+}
+
+resource "google_compute_subnetwork" "public" {
+  name          = var.public_subnet
+  ip_cidr_range = "10.0.2.0/24"
   region        = var.region
   network       = google_compute_network.vpc.id
 }
