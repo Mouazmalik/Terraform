@@ -18,16 +18,14 @@ jobs:
         with:
           terraform_wrapper: false
 
+      # 🔐 FIX: decode base64 properly
       - name: Create credentials file
         run: |
-          cat <<EOF > ${{ github.workspace }}/key.json
-          ${{ secrets.GCP_CREDENTIALS }}
-          EOF
-          
-          ls -lh ${{ github.workspace }}/key.json
-          head -c 10 ${{ github.workspace }}/key.json
-          echo -e "\n"
-          tail -c 10 ${{ github.workspace }}/key.json
+          echo "${{ secrets.GCP_CREDENTIALS_BASE64 }}" | base64 -d > key.json
+
+          echo "==== FILE CHECK ===="
+          ls -lh key.json
+          head -n 3 key.json
 
       - name: Set GCP Environment Variable
         run: |
