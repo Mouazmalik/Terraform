@@ -23,12 +23,9 @@ jobs:
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=key.json" >> $GITHUB_ENV
 
       - name: Terraform Init
-<<<<<<< HEAD
-        run: $env:GODEBUG = "x509ignoreCN=1"
-         terraform init
-=======
-        run: terraform init
->>>>>>> 44b30487a09d9c0c5f2390ebdc94f6612fa4bb72
+        run: |
+          export GODEBUG=x509ignoreCN=1
+          terraform init
 
       - name: Terraform Plan
         run: terraform plan
