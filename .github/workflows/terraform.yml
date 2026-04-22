@@ -16,21 +16,18 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_wrapper: false # Wrapper off karne se output handling behtar hoti hai
+          terraform_wrapper: false
 
-      # Step 1: Base64 secret ko wapas JSON file mein convert karna
+      # Step 1: Secret se direct JSON file banana
       - name: Create credentials file
-        env:
-          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: |
-          echo "$GCP_CREDENTIALS" | base64 --decode > "${{ github.workspace }}/key.json"
+          echo '${{ secrets.GCP_CREDENTIALS }}' > ${{ github.workspace }}/key.json
 
-      # Step 2: Google Application Credentials ka path set karna
       - name: Set GCP Environment Variable
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
 
-      # Step 3: Terraform Init (Backend connection ke liye)
+      # Step 3: Terraform Init
       - name: Terraform Init
         run: terraform init
 
@@ -38,6 +35,6 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      # Step 5: Terraform Apply (Auto Approve)
+      # Step 5: Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
