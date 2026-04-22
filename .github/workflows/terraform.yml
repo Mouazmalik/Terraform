@@ -16,14 +16,15 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      #  Create GCP credentials file (BASE64 FIX)
+      #  Write raw JSON credentials to file via env var (avoids base64 and shell escaping issues)
       - name: Create credentials file
-        run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > key.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: echo "$GCP_CREDENTIALS" > key.json
 
       #  Set environment variable
       - name: Set env
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=key.json" >> $GITHUB_ENV
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
 
       #  Terraform Init (with GODEBUG)
       - name: Terraform Init
