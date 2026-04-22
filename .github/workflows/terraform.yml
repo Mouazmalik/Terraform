@@ -20,6 +20,12 @@ jobs:
       - name: Create credentials file
         run: |
           echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > key.json
+          # Validate the file was written correctly
+          if [ ! -s key.json ]; then
+            echo "ERROR: key.json is empty — GCP_CREDENTIALS secret may not be set or is not valid base64"
+            exit 1
+          fi
+          python3 -c "import json,sys; json.load(open('key.json'))" || { echo "ERROR: key.json is not valid JSON — re-encode with: cat key.json | base64 -w 0"; exit 1; }
 
       #  Set environment variable
       - name: Set env
