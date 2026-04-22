@@ -16,20 +16,25 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      #  Create GCP credentials file (BASE64 FIX)
       - name: Create credentials file
         run: |
-          cat <<EOF > key.json
-          ${{ secrets.GCP_CREDENTIALS }}
-          EOF
+          echo "${{ secrets.GCP_CREDENTIALS_BASE64 }}" | base64 -d > key.json
 
+      #  Set environment variable
       - name: Set env
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=key.json" >> $GITHUB_ENV
 
+      #  Terraform Init (with GODEBUG)
       - name: Terraform Init
-        run: terraform init
+        run: |
+          export GODEBUG=x509ignoreCN=1
+          terraform init
 
+      #  Terraform Plan
       - name: Terraform Plan
         run: terraform plan
 
+      #  Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
