@@ -18,6 +18,16 @@ jobs:
         with:
           terraform_wrapper: false
 
+      - name: Check GCP credentials secret
+        run: |
+          if [ -z "$CREDS" ]; then
+            echo "::error::GCP_CREDENTIALS secret is empty or not set in this repo"
+            exit 1
+          fi
+          echo "Secret is set (length: ${#CREDS} chars)"
+        env:
+          CREDS: ${{ secrets.GCP_CREDENTIALS }}
+
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
