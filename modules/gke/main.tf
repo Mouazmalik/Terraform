@@ -27,7 +27,7 @@ resource "google_container_node_pool" "nodes" {
   cluster  = google_container_cluster.gke.name
   location = var.region
 
-  node_count = 1
+  node_count = 2
 
   node_config {
     machine_type = "e2-micro"
