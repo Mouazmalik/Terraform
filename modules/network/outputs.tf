@@ -10,3 +10,11 @@ output "private_subnet_id" {
 output "public_subnet_id" {
   value = google_compute_subnetwork.public.id
 }
+
+output "pods_range_name" {
+  value = "pods-range"
+}
+
+output "services_range_name" {
+  value = "services-range"
+}
