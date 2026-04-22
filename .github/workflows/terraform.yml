@@ -10,38 +10,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Code checkout
+      # 📥 Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
+      # 🧰 Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
-      # 🔐 Create credentials file
+      # 🔐 Create GCP credentials file (FIXED)
       - name: Create credentials file
         run: |
           echo "${{ secrets.GCP_CREDENTIALS_BASE64 }}" | base64 -d > key.json
 
-          echo "==== FILE CHECK ===="
+          echo "===== FILE INFO ====="
           ls -lh key.json
+          echo "===== FIRST LINES ====="
           head -n 3 key.json
 
-      # 🧪 Install jq (IMPORTANT FIX)
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      # 🧪 Validate JSON
+      # 🧪 Validate JSON (IMPORTANT DEBUG STEP)
       - name: Validate JSON
-        run: jq . key.json
+        run: |
+          jq . key.json
 
-      # 🌍 Set env (IMPORTANT: early + correct scope)
-      - name: Set GCP Environment Variable
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
+      # 🌍 Set environment variable
+      - name: Set GCP Credentials Env
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
 
-      # 🚀 Terraform Init
+      # 🚀 Terraform Init (FIXED + SAFE)
       - name: Terraform Init
-        run: terraform init
+        run: |
+          export GODEBUG=x509ignoreCN=1
+          terraform init
 
       # 📊 Terraform Plan
       - name: Terraform Plan
