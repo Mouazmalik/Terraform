@@ -10,46 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 📥 Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # 🧰 Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
-      # 🔐 Create GCP credentials file (FIXED)
-      - name: Create credentials file
-        run: |
-          echo "${{ secrets.GCP_CREDENTIALS_BASE64 }}" | base64 -d > key.json
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-          echo "===== FILE INFO ====="
-          ls -lh key.json
-          echo "===== FIRST LINES ====="
-          head -n 3 key.json
-
-      # 🧪 Validate JSON (IMPORTANT DEBUG STEP)
-      - name: Validate JSON
-        run: |
-          jq . key.json
-
-      # 🌍 Set environment variable
-      - name: Set GCP Credentials Env
-        run: |
-          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
-
-      # 🚀 Terraform Init (FIXED + SAFE)
       - name: Terraform Init
-        run: |
-          export GODEBUG=x509ignoreCN=1
-          terraform init
+        run: terraform init
 
-      # 📊 Terraform Plan
       - name: Terraform Plan
         run: terraform plan
 
-      # 🚀 Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
