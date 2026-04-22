@@ -18,7 +18,7 @@ jobs:
         with:
           terraform_wrapper: false
 
-      # 🔐 FIX: decode base64 properly
+      # 🔐 Create credentials file
       - name: Create credentials file
         run: |
           echo "${{ secrets.GCP_CREDENTIALS_BASE64 }}" | base64 -d > key.json
@@ -27,15 +27,23 @@ jobs:
           ls -lh key.json
           head -n 3 key.json
 
+      # 🧪 Validate JSON (NEW STEP ADDED)
+      - name: Validate JSON
+        run: cat key.json | jq .
+
+      # 🌍 Set environment variable
       - name: Set GCP Environment Variable
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
 
+      # 🚀 Terraform Init
       - name: Terraform Init
         run: terraform init
 
+      # 📊 Terraform Plan
       - name: Terraform Plan
         run: terraform plan
 
+      # 🚀 Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
