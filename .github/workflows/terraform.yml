@@ -27,14 +27,17 @@ jobs:
           ls -lh key.json
           head -n 3 key.json
 
-      # 🧪 Validate JSON (NEW STEP ADDED)
-      - name: Validate JSON
-        run: cat key.json | jq .
+      # 🧪 Install jq (IMPORTANT FIX)
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-      # 🌍 Set environment variable
+      # 🧪 Validate JSON
+      - name: Validate JSON
+        run: jq . key.json
+
+      # 🌍 Set env (IMPORTANT: early + correct scope)
       - name: Set GCP Environment Variable
-        run: |
-          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/key.json" >> $GITHUB_ENV
 
       # 🚀 Terraform Init
       - name: Terraform Init
