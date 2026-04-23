@@ -30,26 +30,28 @@ module "network" {
 
 }
 
-module "compute" {
-  source = "./modules/compute"
+# the compute enfine code is temporary commnet
 
-  vm_name = "staging-vm"
-  zone    = "us-west1-a"
+# module "compute" {
+#   source = "./modules/compute"
 
-  network_id = module.network.network_id
-  subnet_id  = module.network.private_subnet_id
+#   vm_name = "staging-vm"
+#   zone    = "us-west1-a"
 
-}
+#   network_id = module.network.network_id
+#   subnet_id  = module.network.private_subnet_id
 
-module "gke" {
-  source = "./modules/gke"
+# }
 
-  cluster_name   = "staging-gke"
-  region         = var.region
+# module "gke" {
+#   source = "./modules/gke"
 
-  network_id     = module.network.network_id
-  subnet_id      = module.network.private_subnet_id
+#   cluster_name   = "staging-gke"
+#   region         = var.region
 
-  pods_range     = module.network.pods_range_name
-  services_range = module.network.services_range_name
-}
+#   network_id     = module.network.network_id
+#   subnet_id      = module.network.private_subnet_id
+
+#   pods_range     = module.network.pods_range_name
+#   services_range = module.network.services_range_name
+# }
