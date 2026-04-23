@@ -43,15 +43,15 @@ module "network" {
 
 # }
 
-# module "gke" {
-#   source = "./modules/gke"
+module "gke" {
+  source = "./modules/gke"
 
-#   cluster_name   = "staging-gke"
-#   region         = var.region
+  cluster_name   = "staging-gke"
+  region         = var.region
 
-#   network_id     = module.network.network_id
-#   subnet_id      = module.network.private_subnet_id
+  network_id     = module.network.network_id
+  subnet_id      = module.network.private_subnet_id
 
-#   pods_range     = module.network.pods_range_name
-#   services_range = module.network.services_range_name
-# }
+  pods_range     = module.network.pods_range_name
+  services_range = module.network.services_range_name
+}
