@@ -1,10 +1,9 @@
-name: "Terraform Deployments"
+name: "Terraform Deployment"
 
 on:
   push:
     branches:
       - main  
-  pull_request:
 
 jobs:
   terraform:
