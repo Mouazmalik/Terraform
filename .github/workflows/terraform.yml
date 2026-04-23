@@ -33,14 +33,14 @@
 
 
 
-name: "Terraform Deployments"
+name: "Terraform GCS Deployment"
 
 on:
   push:
     branches:
-      - main  
+      - main  # Jab aap main branch par push karein tab pipeline chale
 
-# WIF ke liye ye permissions lazmi hain
+# WIF ke liye ye permissions mandatory hain
 permissions:
   contents: read
   id-token: write 
@@ -54,24 +54,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Setup Terraform step ko auth se pehle ya baad mein rakh sakte hain
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
+      # 1. Authenticate to Google Cloud using WIF
       - name: Authenticate to Google Cloud
+        id: auth
         uses: google-github-actions/auth@v2
         with:
-          # Yahan Provider ka poora path dalein jo Step 4/5 mein copy kiya tha
+          # Aapka exact provider path
           workload_identity_provider: 'projects/305318903527/locations/global/workloadIdentityPools/mouaz-pool/providers/github-provider'
           service_account: 'terraform@scrapemore.iam.gserviceaccount.com'
 
+      # 2. Setup Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 3. Terraform Init (GCS backend se connect karega)
       - name: Terraform Init
         run: terraform init
 
+      # 4. Terraform Plan
       - name: Terraform Plan
-        run: terraform plan 
+        run: terraform plan -input=false
 
-      # Apply ko auto-approve par rakhein warna pipeline hang ho jayegi
+      # 5. Terraform Apply (Sirf tab chalega jab changes main branch par merge hon)
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
