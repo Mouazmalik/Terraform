@@ -1,0 +1,6 @@
+project_id     = "scrapemore"
+region         = "us-west1"
+vpc_name       = "staging-vpc"
+vm_name        = "staging-vm"
+public_subnet  = "staging-public-subnet"
+private_subnet = "staging-private-subnet"
