@@ -33,7 +33,7 @@
 
 
 
-name: "Terraform GCS Deployment"
+name: "Terraform GCS Deployments"
 
 on:
   push:
