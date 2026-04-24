@@ -76,5 +76,5 @@ jobs:
         run: terraform plan -input=false
 
       # 5. Terraform Apply (Sirf tab chalega jab changes main branch par merge hon)
-    #   - name: Terraform Apply
-    #     run: terraform apply -auto-approve -input=false
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
