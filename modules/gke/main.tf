@@ -32,6 +32,8 @@ resource "google_container_node_pool" "nodes" {
 
   node_count = 1
 
+  node_locations = ["us-west1-a"]   # 👈 FIX
+
   node_config {
     machine_type = "e2-micro"
 
