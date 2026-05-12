@@ -38,9 +38,9 @@ name: "Terraform GCS Deployment"
 on:
   push:
     branches:
-      - main  # Jab aap main branch par push karein tab pipeline chale
+      - main  
 
-# WIF ke liye ye permissions mandatory hain
+# permission for WIF
 permissions:
   contents: read
   id-token: write 
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # 3. Terraform Init (GCS backend se connect karega)
+      # 3. Terraform Init (GCS backend se connect )
       - name: Terraform Init
         run: terraform init
 
@@ -75,6 +75,6 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
 
-      # 5. Terraform Apply (Sirf tab chalega jab changes main branch par merge hon)
+      # 5. Terraform Apply 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
